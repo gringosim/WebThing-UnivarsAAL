@@ -23,17 +23,19 @@ import java.util.Set;
  * A Web Thing.
  */
 public class Thing {
-    private String context;
+    private String[] context={"http://w3c.github.io/wot/w3c-wot-td-context.jsonld",
+                              "http://w3c.github.io/wot/w3c-wot-common-context.jsonld",
+                              "http://iot.schema.org"};
     private List<String> type;
     private String name;
-    private String description;
+  //  private String description;
     private Map<String, Property> properties;
     private Map<String, AvailableAction> availableActions;
     private Map<String, AvailableEvent> availableEvents;
     private Map<String, List<Action>> actions;
     private List<Event> events;
     private Set<WebThingServer.ThingHandler.ThingWebSocket> subscribers;
-    private String hrefPrefix;
+    public String hrefPrefix;
     private String wsHref;
     private String uiHref;
 
@@ -42,9 +44,9 @@ public class Thing {
      *
      * @param name The thing's name
      */
-    public Thing(String name) {
-        this(name, new ArrayList<>(), "");
-    }
+  /*  public Thing(String name) {
+        this(name);
+    }*///Eze: modificado
 
     /**
      * Initialize the object.
@@ -52,22 +54,23 @@ public class Thing {
      * @param name The thing's name
      * @param type The thing's type(s)
      */
-    public Thing(String name, List<String> type) {
-        this(name, type, "");
-    }
+ /*   public Thing(String name, List<String> type) {
+        this(name, type);
+    }*/
 
     /**
      * Initialize the object.
      *
      * @param name        The thing's name
      * @param type        The thing's type(s)
-     * @param description Description of the thing
+     //* @param description Description of the thing
      */
-    public Thing(String name, List<String> type, String description) {
+
+    public Thing(String name, List<String> type) {
         this.name = name;
-        this.context = "https://iot.mozilla.org/schemas";
+       // this.context = "https://iot.mozilla.org/schemas";
         this.type = type;
-        this.description = description;
+      //  this.description = description;
         this.properties = new HashMap<>();
         this.availableActions = new HashMap<>();
         this.availableEvents = new HashMap<>();
@@ -98,26 +101,27 @@ public class Thing {
         });
 
         try {
+            obj.put("@context", this.context);
             obj.put("name", this.getName());
-            obj.put("href",
-                    this.hrefPrefix.length() > 0 ? this.hrefPrefix : "/");
-            obj.put("@context", this.getContext());
+        /*    obj.put("href",
+                    this.hrefPrefix.length() > 0 ? this.hrefPrefix : "/");*/
+
             obj.put("@type", this.getType());
             obj.put("properties", this.getPropertyDescriptions());
-            obj.put("actions", actions);
-            obj.put("events", events);
+        /*    obj.put("actions", actions);
+            obj.put("events", events);*/
 
-            if (this.description != null) {
+          /*  if (this.description != null) {
                 obj.put("description", this.getDescription());
-            }
+            }*/
 
-            JSONObject propertiesLink = new JSONObject();
+          /*  JSONObject propertiesLink = new JSONObject();
             propertiesLink.put("rel", "properties");
             propertiesLink.put("href",
                                String.format("%s/properties", this.hrefPrefix));
-            obj.accumulate("links", propertiesLink);
+            obj.accumulate("links", propertiesLink);*/
 
-            JSONObject actionsLink = new JSONObject();
+           /* JSONObject actionsLink = new JSONObject();
             actionsLink.put("rel", "actions");
             actionsLink.put("href",
                             String.format("%s/actions", this.hrefPrefix));
@@ -141,7 +145,7 @@ public class Thing {
                 uiLink.put("mediaType", "text/html");
                 uiLink.put("href", this.uiHref);
                 obj.accumulate("links", uiLink);
-            }
+            }*/
 
             return obj;
         } catch (JSONException e) {
@@ -239,9 +243,9 @@ public class Thing {
      *
      * @return The context.
      */
-    public String getContext() {
+    /*public String getContext() {
         return this.context;
-    }
+    }*/
 
     /**
      * Get the type(s) of the thing.
@@ -257,26 +261,28 @@ public class Thing {
      *
      * @return The description.
      */
-    public String getDescription() {
+ /*   public String getDescription() {
         return this.description;
-    }
+    }*/
 
     /**
      * Get the thing's properties as a JSONObject.
      *
      * @return Properties, i.e. name: description.
      */
-    public JSONObject getPropertyDescriptions() {
+    public JSONArray getPropertyDescriptions() {
         JSONObject obj = new JSONObject();
-
+        JSONArray wrapper = new JSONArray();
         this.properties.forEach((name, value) -> {
             try {
                 obj.put(name, value.asPropertyDescription());
+
             } catch (JSONException e) {
             }
         });
-
-        return obj;
+        wrapper.put(obj);
+        //return obj;
+        return wrapper;
     }
 
     /**

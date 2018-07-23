@@ -17,8 +17,7 @@ import java.util.UUID;
 public class SingleThing {
     public static Thing makeThing() {
         Thing thing = new Thing("My Lamp",
-                                Arrays.asList("OnOffSwitch", "Light"),
-                                "A web connected lamp");
+                                Arrays.asList("OnOffSwitch", "Light"));
 
         Map<String, Object> onDescription = new HashMap<>();
         onDescription.put("@type", "OnOffProperty");

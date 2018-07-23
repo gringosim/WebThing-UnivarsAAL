@@ -22,12 +22,12 @@ public class MultipleThings {
         Thing light = new ExampleDimmableLight();
 
         // Create a thing that represents a humidity sensor
-        Thing sensor = new FakeGpioHumiditySensor();
+      //  Thing sensor = new FakeGpioHumiditySensor();
 
         try {
             List<Thing> things = new ArrayList<>();
             things.add(light);
-            things.add(sensor);
+        //    things.add(sensor);
 
             // If adding more than one thing, use MultipleThings() with a name.
             // In the single thing case, the thing's name will be broadcast.
@@ -55,14 +55,14 @@ public class MultipleThings {
     public static class ExampleDimmableLight extends Thing {
         public ExampleDimmableLight() {
             super("My Lamp",
-                  Arrays.asList("OnOffSwitch", "Light"),
-                  "A web connected lamp");
+                  Arrays.asList("Thing", "Switch")// Eze: modificado según JSON modelo
+                  );
 
             Map<String, Object> onDescription = new HashMap<>();
             onDescription.put("@type", "OnOffProperty");
             onDescription.put("label", "On/Off");
-            onDescription.put("type", "boolean");
-            onDescription.put("description", "Whether the lamp is turned on");
+            onDescription.put("inputType", "boolean");
+            onDescription.put("writable", "true");
 
             Value<Boolean> on = new Value<>(true,
                                             // Here, you could send a signal to
@@ -73,8 +73,8 @@ public class MultipleThings {
                                                     v));
 
             this.addProperty(new Property(this, "on", on, onDescription));
-
-            Map<String, Object> brightnessDescription = new HashMap<>();
+           
+           /* Map<String, Object> brightnessDescription = new HashMap<>();
             brightnessDescription.put("@type", "BrightnessProperty");
             brightnessDescription.put("label", "Brightness");
             brightnessDescription.put("type", "number");
@@ -83,6 +83,7 @@ public class MultipleThings {
             brightnessDescription.put("minimum", 0);
             brightnessDescription.put("maximum", 100);
             brightnessDescription.put("unit", "percent");
+
 
             Value<Integer> brightness = new Value<>(50,
                                                     // Here, you could send a signal
@@ -95,7 +96,7 @@ public class MultipleThings {
             this.addProperty(new Property(this,
                                           "brightness",
                                           brightness,
-                                          brightnessDescription));
+                                          brightnessDescription));*/
 
             Map<String, Object> fadeMetadata = new HashMap<>();
             Map<String, Object> fadeInput = new HashMap<>();
@@ -156,13 +157,12 @@ public class MultipleThings {
     /**
      * A humidity sensor which updates its measurement every few seconds.
      */
-    public static class FakeGpioHumiditySensor extends Thing {
+   /* public static class FakeGpioHumiditySensor extends Thing {
         private final Value<Double> level;
 
         public FakeGpioHumiditySensor() {
             super("My Humidity Sensor",
-                  Arrays.asList("MultiLevelSensor"),
-                  "A web connected humidity sensor");
+                  Arrays.asList("MultiLevelSensor"));
 
             Map<String, Object> levelDescription = new HashMap<>();
             levelDescription.put("@type", "LevelProperty");
@@ -199,8 +199,6 @@ public class MultipleThings {
         /**
          * Mimic an actual sensor updating its reading every couple seconds.
          */
-        private double readFromGPIO() {
-            return Math.abs(70.0d * Math.random() * (-0.5 + Math.random()));
-        }
-    }
+
+
 }
