@@ -56,7 +56,11 @@ public class Property<T> {
         } else {
             this.metadata = metadata;
         }
-
+        JSONObject link = new JSONObject();
+        this.thing.setHrefPrefix("0");
+        link.put("href",String.format(this.thing.getHref()+"/properties/%s", "on"));
+        link.put("mediaType","application/json");
+        this.metadata.put("link",link);
         // Add the property change observer to notify the Thing about a
         // property change
         this.value.addObserver((a, b) -> this.thing.propertyNotify(this));
@@ -69,9 +73,11 @@ public class Property<T> {
      */
     public JSONObject asPropertyDescription() {
         JSONObject description = new JSONObject(this.metadata);
-        description.put("href", this.hrefPrefix + this.href);
+        //description.put("href", this.hrefPrefix + this.href);
         return description;
     }
+
+
 
     /**
      * Set the prefix of any hrefs associated with this property.

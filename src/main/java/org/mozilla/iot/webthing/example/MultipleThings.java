@@ -1,5 +1,6 @@
 package org.mozilla.iot.webthing.example;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mozilla.iot.webthing.Action;
 import org.mozilla.iot.webthing.Event;
@@ -53,15 +54,31 @@ public class MultipleThings {
      * A dimmable light that logs received commands to std::out.
      */
     public static class ExampleDimmableLight extends Thing {
+        public String[] onType={"Property",
+                                "Light",
+                                "OnOffState"};
         public ExampleDimmableLight() {
             super("My Lamp",
                   Arrays.asList("Thing", "Switch")// Eze: modificado según JSON modelo
                   );
 
             Map<String, Object> onDescription = new HashMap<>();
-            onDescription.put("@type", "OnOffProperty");
-            onDescription.put("label", "On/Off");
-            onDescription.put("inputType", "boolean");
+            onDescription.put("name", "Bathroom light");
+
+            JSONObject inputType = new JSONObject();
+            JSONObject outputType = new JSONObject();
+            JSONObject link = new JSONObject();
+            inputType.put("type", "boolean");
+            onDescription.put("inputType", inputType);
+            outputType.put("type", "boolean");
+            onDescription.put("outputType", outputType);
+            onDescription.put("@type", onType);
+            link.put("href",String.format("/properties/%s", "on"));
+            link.put("mediaType","application/json");
+            //onDescription.put("link",link);
+           // onDescription.put("@type", "OnOffProperty");
+          //  onDescription.put("label", "On/Off");
+          //  onDescription.put("inputType", "boolean");
             onDescription.put("writable", "true");
 
             Value<Boolean> on = new Value<>(true,
@@ -73,7 +90,7 @@ public class MultipleThings {
                                                     v));
 
             this.addProperty(new Property(this, "on", on, onDescription));
-           
+
            /* Map<String, Object> brightnessDescription = new HashMap<>();
             brightnessDescription.put("@type", "BrightnessProperty");
             brightnessDescription.put("label", "Brightness");

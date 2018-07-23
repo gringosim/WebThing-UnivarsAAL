@@ -5,27 +5,30 @@
             "Switch"
         ],
         "name": "My Lamp",
-        "links": {
-            "rel": "properties",
-            "href": "/0/properties"
-        },
         "@context": [
             "http://w3c.github.io/wot/w3c-wot-td-context.jsonld",
             "http://w3c.github.io/wot/w3c-wot-common-context.jsonld",
             "http://iot.schema.org"
         ],
-        "properties": {
-            "on": {
-                "description": "Whether the lamp is turned on",
-                "links": {
-                    "rel": "properties",
-                    "href": "/properties"
-                },
-                "label": "On/Off",
-                "href": "/0/properties/on",
-                "type": "boolean",
-                "@type": "OnOffProperty"
+        "properties": [
+            {
+                "on": {
+                    "name": "Bathroom light",
+                    "outputType": {
+                        "type": "boolean"
+                    },
+                    "inputType": {
+                        "type": "boolean"
+                    },
+                    "href": "/0/properties/on",
+                    "@type": [
+                        "Property",
+                        "Light",
+                        "OnOffState"
+                    ],
+                    "writable": "true"
+                }
             }
-        }
+        ]
     }
 ]

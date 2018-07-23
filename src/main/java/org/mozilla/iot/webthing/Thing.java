@@ -103,8 +103,8 @@ public class Thing {
         try {
             obj.put("@context", this.context);
             obj.put("name", this.getName());
-        /*    obj.put("href",
-                    this.hrefPrefix.length() > 0 ? this.hrefPrefix : "/");*/
+           obj.put("href",
+                    this.hrefPrefix.length() > 0 ? this.hrefPrefix : "/");
 
             obj.put("@type", this.getType());
             obj.put("properties", this.getPropertyDescriptions());
